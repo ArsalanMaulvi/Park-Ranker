@@ -191,4 +191,12 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Import the PgStorage implementation
+import { PgStorage } from './pg-storage';
+
+// Determine which storage implementation to use
+// Use environment variable to control this if needed
+const usePostgres = process.env.NODE_ENV !== 'test'; // Use in-memory for tests
+
+// Export the appropriate storage implementation
+export const storage = usePostgres ? new PgStorage() : new MemStorage();

@@ -120,20 +120,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const parks = await storage.getParks();
       if (parks.length === 0) {
-        // Import national parks data
-        const { nationalParksData } = await import("./national-parks-data");
+        // Import and run the migration function
+        const { migrateData } = await import("./migrate-data");
+        await migrateData();
         
-        // Add each park to storage
-        for (const parkData of nationalParksData) {
-          await storage.addPark(parkData);
-        }
-        
-        // Update park rankings
-        await storage.updatePreviousRanks();
+        // Get the updated park count
+        const updatedParks = await storage.getParks();
         
         res.json({ 
           message: "Data initialized successfully", 
-          count: nationalParksData.length 
+          count: updatedParks.length 
         });
       } else {
         res.json({ 

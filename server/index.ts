@@ -1,6 +1,9 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+// Import the db module and migrate-data function
+import { db, testConnection } from "./db";
+import { migrateData } from "./migrate-data";
 
 const app = express();
 app.use(express.json());
@@ -37,6 +40,25 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  try {
+    // Test database connection first
+    log("Testing database connection...");
+    await testConnection();
+    
+    // Run database migrations to create tables (if they don't exist)
+    log("Running db:push to ensure database schema is up to date");
+    const { $ } = await import("execa");
+    await $`npm run db:push`;
+    log("Database schema is up to date");
+    
+    // Then, migrate data from the JSON to the database
+    log("Migrating parks data to PostgreSQL...");
+    await migrateData();
+    log("Data migration complete");
+  } catch (error) {
+    log(`Error during database setup: ${error}`);
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
