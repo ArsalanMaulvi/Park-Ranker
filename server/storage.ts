@@ -1,4 +1,5 @@
 import { type Vote, type InsertVote, type Park, type InsertPark, RankedPark } from "@shared/schema";
+import { DbStorage } from "./db-storage";
 
 export interface IStorage {
   // Park operations
@@ -191,4 +192,5 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Use database storage instead of memory storage
+export const storage = new DbStorage();
