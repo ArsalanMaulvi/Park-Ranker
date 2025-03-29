@@ -6,12 +6,12 @@ interface RecentVote {
   winner: {
     id: number;
     name: string;
-    icon: string;
+    imageUrl: string;
   };
   loser: {
     id: number;
     name: string;
-    icon: string;
+    imageUrl: string;
   };
 }
 
@@ -34,13 +34,13 @@ export default function RecentVotes({ votes }: RecentVotesProps) {
         <div key={vote.id} className="border-t border-neutral-200 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <span className="w-6 h-6 mr-2 text-center">{vote.winner.icon}</span>
+              <img src={vote.winner.imageUrl} alt={vote.winner.name} className="w-6 h-6 mr-2 object-cover rounded-full" />
               <span className="text-sm font-medium">{vote.winner.name}</span>
             </div>
             <div className="text-neutral-500 text-sm">defeated</div>
             <div className="flex items-center">
               <span className="text-sm font-medium">{vote.loser.name}</span>
-              <span className="w-6 h-6 ml-2 text-center">{vote.loser.icon}</span>
+              <img src={vote.loser.imageUrl} alt={vote.loser.name} className="w-6 h-6 ml-2 object-cover rounded-full" />
             </div>
           </div>
           <div className="text-xs text-neutral-500 mt-1 text-right">

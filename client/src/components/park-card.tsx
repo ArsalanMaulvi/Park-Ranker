@@ -18,7 +18,6 @@ export default function ParkCard({ park, onVote, disabled = false }: ParkCardPro
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
           <div className="flex items-center">
-            <span className="w-6 h-6 mr-2 text-center">{park.icon}</span>
             <h3 className="text-white font-medium">{park.name}</h3>
           </div>
         </div>
@@ -30,10 +29,10 @@ export default function ParkCard({ park, onVote, disabled = false }: ParkCardPro
         </p>
         <div className="flex mt-3 justify-between items-center">
           <span className="bg-neutral-200 text-neutral-800 text-xs px-3 py-1 rounded-full">
-            Established {park.establishedYear}
+            {park.location}
           </span>
           <span className="bg-neutral-200 text-neutral-800 text-xs px-3 py-1 rounded-full">
-            Rank #{park.previousRank || '—'}
+            Rank #{park.previousRanking || '—'}
           </span>
         </div>
       </div>

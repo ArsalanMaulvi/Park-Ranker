@@ -32,11 +32,10 @@ export default function RankingsTable({ parks, showAllButton = false }: Rankings
         <div key={park.id} className="border-t border-neutral-200 py-3 flex justify-between items-center">
           <div className="flex items-center">
             <span className="font-mono text-lg mr-3 text-neutral-700">{park.rank}</span>
-            <span className="w-6 h-6 mr-2 text-center">{park.icon}</span>
             <span className="font-medium">{park.name}</span>
           </div>
           <div className="flex items-center space-x-6">
-            <span className="font-mono">{park.eloScore}</span>
+            <span className="font-mono">{park.score}</span>
             {getRankChangeIndicator(park.rankChange)}
           </div>
         </div>

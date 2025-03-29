@@ -74,7 +74,7 @@ export function useVote() {
       const loser: Park = await loserResponse.json();
       
       // Calculate new ELO ratings
-      const { scoreDelta } = calculateElo(winner.eloScore, loser.eloScore);
+      const { scoreDelta } = calculateElo(winner.score, loser.score);
       
       // Submit vote
       const response = await apiRequest("POST", "/api/votes", {

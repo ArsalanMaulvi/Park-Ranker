@@ -19,24 +19,19 @@ export const parks = pgTable("parks", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  establishedYear: integer("established_year").notNull(),
   location: text("location").notNull(),
   imageUrl: text("image_url").notNull(),
-  icon: text("icon").notNull(), // Emoji icon for the park
-  eloScore: integer("elo_score").notNull().default(1500),
-  previousRank: integer("previous_rank"),
-  totalVotes: integer("total_votes").notNull().default(0),
-  wins: integer("wins").notNull().default(0),
-  losses: integer("losses").notNull().default(0),
+  score: integer("score").notNull().default(1500), // ELO rating score
+  previousRanking: integer("previous_ranking"), // For tracking rank changes
 });
 
 export const insertParkSchema = createInsertSchema(parks).pick({
   name: true,
   description: true,
-  establishedYear: true,
   location: true,
   imageUrl: true,
-  icon: true,
+  score: true,
+  previousRanking: true,
 });
 
 // Schema for votes

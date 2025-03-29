@@ -67,12 +67,12 @@ export class MemStorage implements IStorage {
     const id = this.parkCurrentId++;
     const park: Park = {
       id,
-      ...parkData,
-      eloScore: 1500, // Default ELO score
-      previousRank: null, // Start with null instead of undefined
-      totalVotes: 0,
-      wins: 0,
-      losses: 0,
+      name: parkData.name,
+      description: parkData.description,
+      location: parkData.location,
+      imageUrl: parkData.imageUrl,
+      score: parkData.score || 1500, // Default ELO score
+      previousRanking: parkData.previousRanking || null, // Start with null if not provided
     };
     
     this.parks.set(id, park);
@@ -87,7 +87,7 @@ export class MemStorage implements IStorage {
     
     const updatedPark: Park = {
       ...park,
-      eloScore: newScore
+      score: newScore
     };
     
     this.parks.set(id, updatedPark);
@@ -112,16 +112,16 @@ export class MemStorage implements IStorage {
     const parks = Array.from(this.parks.values());
     
     // Sort parks by ELO score in descending order
-    const sortedParks = parks.sort((a, b) => b.eloScore - a.eloScore);
+    const sortedParks = parks.sort((a, b) => b.score - a.score);
     
     // Map to RankedPark with rank and rank change
     return sortedParks.map((park, index) => {
       const rank = index + 1;
       let rankChange = 0;
       
-      // Calculate rank change if previousRank exists
-      if (park.previousRank !== null && park.previousRank !== undefined) {
-        rankChange = park.previousRank - rank;
+      // Calculate rank change if previousRanking exists
+      if (park.previousRanking !== null && park.previousRanking !== undefined) {
+        rankChange = park.previousRanking - rank;
       }
       
       return {
@@ -136,7 +136,7 @@ export class MemStorage implements IStorage {
     const id = this.voteCurrentId++;
     const timestamp = new Date();
     
-    // Update park win/loss records and total votes
+    // Update park scores
     const winner = this.parks.get(voteData.winnerParkId);
     const loser = this.parks.get(voteData.loserParkId);
     
@@ -144,18 +144,16 @@ export class MemStorage implements IStorage {
       throw new Error("Winner or loser park not found");
     }
     
+    // Update winner score
     this.parks.set(winner.id, {
       ...winner,
-      wins: winner.wins + 1,
-      totalVotes: winner.totalVotes + 1,
-      eloScore: winner.eloScore + voteData.scoreDelta
+      score: winner.score + voteData.scoreDelta
     });
     
+    // Update loser score
     this.parks.set(loser.id, {
       ...loser,
-      losses: loser.losses + 1,
-      totalVotes: loser.totalVotes + 1,
-      eloScore: loser.eloScore - voteData.scoreDelta
+      score: loser.score - voteData.scoreDelta
     });
     
     const vote: Vote = {
@@ -186,7 +184,7 @@ export class MemStorage implements IStorage {
       if (currentPark) {
         this.parks.set(park.id, {
           ...currentPark,
-          previousRank: park.rank
+          previousRanking: park.rank
         });
       }
     }
