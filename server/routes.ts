@@ -95,21 +95,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
       const recentVotes = await storage.getRecentVotes(limit);
       
-      // Get park data for each vote to return more complete info
-      const votesWithParkInfo = await Promise.all(
-        recentVotes.map(async (vote) => {
-          const winner = await storage.getParkById(vote.winnerParkId);
-          const loser = await storage.getParkById(vote.loserParkId);
-          
-          return {
-            ...vote,
-            winner,
-            loser
-          };
-        })
-      );
-      
-      res.json(votesWithParkInfo);
+      res.json(recentVotes);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch recent votes" });
     }
