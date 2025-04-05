@@ -78,6 +78,18 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
+  // Serve static files in production
+  if (app.get("env") === "production") {
+    const path = require("path");
+    const express = require("express");
+    app.use(express.static(path.join(__dirname, "../dist/public")));
+
+    // Serve index.html for any unmatched routes
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(__dirname, "../dist/public", "index.html"));
+    });
+  }
+
   // Try to determine the port from environment variables
   const port = parseInt(process.env.PORT || "5000", 10);
   
